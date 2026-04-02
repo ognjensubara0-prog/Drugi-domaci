@@ -1,23 +1,27 @@
 package org.acme;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
-@NamedQuery(name = Reservation.GET_RESERVATIONS_BY_BRANCH, query = "Select r from Reservation r where r.branch.id = :id")
+@Table(name = "reservation")
+@NamedQuery(name = Reservation.GET_ALL_RESERVATIONS, query = "Select r from Reservation r")
 public class Reservation {
-    public static final String GET_RESERVATIONS_BY_BRANCH = "GetReservationsByBranch";
+    public static final String GET_ALL_RESERVATIONS = "GetAllReservations";
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "res_seq")
     @SequenceGenerator(name = "res_seq", sequenceName = "res_seq", allocationSize = 1)
     private Long id;
 
-    private String start_date;
-    private String end_date;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private String status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -30,6 +34,8 @@ public class Reservation {
     public Reservation() {
     }
 
+    // --- GETTERI I SETTERI ---
+
     public Long getId() {
         return id;
     }
@@ -38,20 +44,20 @@ public class Reservation {
         this.id = id;
     }
 
-    public String getStart_date() {
-        return start_date;
+    public LocalDate getStartDate() {
+        return startDate;
     }
 
-    public void setStart_date(String start_date) {
-        this.start_date = start_date;
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
     }
 
-    public String getEnd_date() {
-        return end_date;
+    public LocalDate getEndDate() {
+        return endDate;
     }
 
-    public void setEnd_date(String end_date) {
-        this.end_date = end_date;
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
 
     public String getStatus() {

@@ -1,9 +1,13 @@
 package org.acme;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
+@Table(name = "user_profile")
+@NamedQuery(name = UserProfile.GET_ALL_PROFILES, query = "Select p from UserProfile p")
 public class UserProfile {
+    public static final String GET_ALL_PROFILES = "GetAllProfiles";
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_profile_seq")
@@ -15,10 +19,13 @@ public class UserProfile {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
     public UserProfile() {
     }
+
+    // --- GETTERI I SETTERI ---
 
     public Long getId() {
         return id;

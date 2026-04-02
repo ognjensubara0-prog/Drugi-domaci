@@ -13,31 +13,25 @@ public class BranchService {
     EntityManager em;
 
     @Transactional
-    public Branch createBranch(Branch branch) {
-        // Osnovna provjera kako bi izbjegli NullPointerException
-        if (branch == null || branch.getName() == null) {
-            return null; 
+    public Branch addBranch(Branch branch) {
+        // Osiguravamo da svaka rezervacija u listi zna kojoj poslovnici pripada
+        if (branch.getReservations() != null) {
+            branch.getReservations().forEach(r -> r.setBranch(branch));
         }
-
-        // Koristimo persist za novi entitet
-        em.persist(branch);
-        return branch;
+        return em.merge(branch);
     }
 
     public List<Branch> getAllBranches() {
-        // Jednostavan JPQL upit za listanje svih poslovnica
-        return em.createQuery("SELECT b FROM Branch b", Branch.class).getResultList();
+        return em.createNamedQuery(Branch.GET_ALL_BRANCHES, Branch.class).getResultList();
     }
 
     public Branch getBranchById(Long id) {
         return em.find(Branch.class, id);
     }
 
-    @Transactional
-    public void deleteBranch(Long id) {
-        Branch branch = getBranchById(id);
-        if (branch != null) {
-            em.remove(branch);
-        }
+    public List<Branch> findByCity(String city) {
+        return em.createQuery("SELECT b FROM Branch b WHERE b.city = :city", Branch.class)
+                 .setParameter("city", city)
+                 .getResultList();
     }
 }

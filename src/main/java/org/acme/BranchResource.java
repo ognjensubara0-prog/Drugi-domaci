@@ -15,15 +15,44 @@ public class BranchResource {
     BranchService branchService;
 
     @POST
-    @Path("/addBranch")
+    @Path("/add")
     public Response addBranch(Branch branch) {
-        branchService.createBranch(branch);
-        return Response.ok("Branch dodana uspješno!").build();
+        Branch created = branchService.addBranch(branch);
+        return Response.ok().entity(created).build();
     }
 
     @GET
-    @Path("/getAllBranches")
-    public List<Branch> getAllBranches() {
+    @Path("/all")
+    public List<Branch> getAll() {
         return branchService.getAllBranches();
+    }
+
+    @GET
+    @Path("/{id}")
+    public Response getById(@PathParam("id") Long id) {
+        Branch branch = branchService.getBranchById(id);
+        if (branch == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok().entity(branch).build();
+    }
+
+    // USLOV 3: Pretraga preko @QueryParam (npr. /branch/search?city=Podgorica)
+    @GET
+    @Path("/search")
+    public Response searchByCity(@QueryParam("city") String city) {
+        List<Branch> branches = branchService.findByCity(city);
+        return Response.ok().entity(branches).build();
+    }
+
+    // USLOV 5: Endpoint koji vraća kolekciju rezervacija za određenu poslovnicu
+    @GET
+    @Path("/{id}/reservations")
+    public Response getReservations(@PathParam("id") Long id) {
+        Branch branch = branchService.getBranchById(id);
+        if (branch == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok().entity(branch.getReservations()).build();
     }
 }

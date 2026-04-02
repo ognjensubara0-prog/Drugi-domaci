@@ -1,7 +1,7 @@
 package org.acme;
 
 import jakarta.persistence.*;
-import java.util.Objects;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,17 +19,20 @@ public class User {
     private String email;
     private String password;
 
+    // USLOV 1: Prva @OneToOne relacija (User -> UserProfile)
+    // Postavljamo LAZY fetch prema tvom zahtjevu
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private UserProfile userProfile;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Reservation> reservations;
+    // USLOV 2: Prva @OneToMany relacija (User -> Reservation)
+    // Dodajemo CascadeType.ALL da bi mogao dodati User-a i njegove rezervacije odjednom (Uslov 4)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Reservation> reservations = new ArrayList<>();
 
-    // 1. Prazan konstruktor (Hibernate ga obavezno traži)
     public User() {
     }
 
-    // 2. GETTERI I SETTERI (Pišu se jedan ispod drugog)
+    // --- GETTERI I SETTERI ---
 
     public Long getId() {
         return id;
@@ -69,6 +72,10 @@ public class User {
 
     public void setUserProfile(UserProfile userProfile) {
         this.userProfile = userProfile;
+        // Ključno: Osiguravamo dvosmjernu vezu ako profil nije null
+        if (userProfile != null) {
+            userProfile.setUser(this);
+        }
     }
 
     public List<Reservation> getReservations() {
@@ -77,5 +84,11 @@ public class User {
 
     public void setReservations(List<Reservation> reservations) {
         this.reservations = reservations;
+        // Ključno: Povezujemo svaku rezervaciju sa ovim userom
+        if (reservations != null) {
+            for (Reservation r : reservations) {
+                r.setUser(this);
+            }
+        }
     }
 }

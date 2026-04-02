@@ -3,7 +3,10 @@ package org.acme;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "payment")
+@NamedQuery(name = Payment.GET_ALL_PAYMENTS, query = "Select p from Payment p")
 public class Payment {
+    public static final String GET_ALL_PAYMENTS = "GetAllPayments";
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pay_seq")
@@ -14,12 +17,15 @@ public class Payment {
     private String payment_date;
     private String method;
 
+    // USLOV 1: Druga @OneToOne relacija (Payment -> Reservation)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reservation_id")
     private Reservation reservation;
 
     public Payment() {
     }
+
+    // GETTERI I SETTERI (Jedan ispod drugog)
 
     public Long getId() {
         return id;

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 @Entity
+@Table(name = "branch")
 @NamedQuery(name = Branch.GET_ALL_BRANCHES, query = "Select b from Branch b")
 public class Branch {
     public static final String GET_ALL_BRANCHES = "GetAllBranches";
@@ -18,11 +19,14 @@ public class Branch {
     private String city;
     private String address;
 
+    // USLOV 2: Druga @OneToMany relacija (Branch -> Reservation)
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Reservation> reservations = new ArrayList<>();
 
     public Branch() {
     }
+
+    // GETTERI I SETTERI (Jedan ispod drugog)
 
     public Long getId() {
         return id;

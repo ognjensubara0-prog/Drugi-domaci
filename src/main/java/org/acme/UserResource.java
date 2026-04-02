@@ -14,7 +14,6 @@ public class UserResource {
     @Inject
     UserService userService;
 
-    // Putanja: POST http://localhost:8080/user/add
     @POST
     @Path("/add")
     public Response addUser(User user) {
@@ -22,7 +21,6 @@ public class UserResource {
         return Response.ok().entity(created).build();
     }
 
-    // Putanja: GET http://localhost:8080/user/all
     @GET
     @Path("/all")
     public Response getAll() {
@@ -30,7 +28,7 @@ public class UserResource {
         return Response.ok().entity(users).build();
     }
 
-    // Putanja: GET http://localhost:8080/user/1
+    // USLOV 3: Pretraga koristeći @PathParam (već imaš)
     @GET
     @Path("/{id}")
     public Response getById(@PathParam("id") Long id) {
@@ -39,5 +37,26 @@ public class UserResource {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         return Response.ok().entity(user).build();
+    }
+
+    // USLOV 3: Pretraga koristeći @QueryParam (npr. /user/search?name=Ognjen)
+    @GET
+    @Path("/search")
+    public Response search(@QueryParam("name") String name) {
+        List<User> users = userService.findByName(name);
+        return Response.ok().entity(users).build();
+    }
+
+    // USLOV 5: GET endpoint koji vraća POJEDINAČNU KOLEKCIJU (rezervacije) za usera
+    // Putanja: GET http://localhost:8080/user/1/reservations
+    @GET
+    @Path("/{id}/reservations")
+    public Response getReservations(@PathParam("id") Long id) {
+        User user = userService.getUserById(id);
+        if (user == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        // Budući da je fetch=LAZY, ovo će se učitati samo kad pozoveš getter
+        return Response.ok().entity(user.getReservations()).build();
     }
 }
