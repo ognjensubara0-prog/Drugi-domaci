@@ -25,7 +25,7 @@ public class UserProfileService {
         return em.find(UserProfile.class, id);
     }
 
-    // Metoda za pretragu po broju telefona (za @QueryParam)
+    
     public List<UserProfile> findByPhone(String phone) {
         return em.createQuery("SELECT p FROM UserProfile p WHERE p.phone = :phone", UserProfile.class)
                  .setParameter("phone", phone)

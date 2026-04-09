@@ -27,7 +27,7 @@ public class PaymentResource {
         return paymentService.getAllPayments();
     }
 
-    // USLOV 3: Pretraga preko @PathParam (po ID-u uplate)
+    
     @GET
     @Path("/{id}")
     public Response getById(@PathParam("id") Long id) {
@@ -38,7 +38,7 @@ public class PaymentResource {
         return Response.ok().entity(payment).build();
     }
 
-    // USLOV 3: Pretraga preko @QueryParam (npr. /payment/search?method=CASH)
+    
     @GET
     @Path("/search")
     public Response searchByMethod(@QueryParam("method") String method) {

@@ -25,7 +25,7 @@ public class UserProfile {
     public UserProfile() {
     }
 
-    // --- GETTERI I SETTERI ---
+    
 
     public Long getId() {
         return id;

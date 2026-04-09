@@ -14,7 +14,7 @@ public class BranchService {
 
     @Transactional
     public Branch addBranch(Branch branch) {
-        // Osiguravamo da svaka rezervacija u listi zna kojoj poslovnici pripada
+        
         if (branch.getReservations() != null) {
             branch.getReservations().forEach(r -> r.setBranch(branch));
         }

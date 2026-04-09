@@ -27,7 +27,7 @@ public class UserProfileResource {
         return profileService.getAllProfiles();
     }
 
-    // USLOV 3: Pretraga koristeći @PathParam (po ID-u profila)
+    
     @GET
     @Path("/{id}")
     public Response getById(@PathParam("id") Long id) {
@@ -38,7 +38,7 @@ public class UserProfileResource {
         return Response.ok().entity(profile).build();
     }
 
-    // USLOV 3: Pretraga koristeći @QueryParam (npr. /profile/search?phone=067111222)
+    
     @GET
     @Path("/search")
     public Response searchByPhone(@QueryParam("phone") String phone) {

@@ -27,7 +27,7 @@ public class ReservationResource {
         return reservationService.getAllReservations();
     }
 
-    // USLOV 3: Pretraga preko @PathParam (po ID-u rezervacije)
+    
     @GET
     @Path("/{id}")
     public Response getById(@PathParam("id") Long id) {
@@ -38,7 +38,7 @@ public class ReservationResource {
         return Response.ok().entity(res).build();
     }
 
-    // USLOV 3: Pretraga preko @QueryParam (npr. /reservation/search?status=CONFIRMED)
+    
     @GET
     @Path("/search")
     public Response searchByStatus(@QueryParam("status") String status) {

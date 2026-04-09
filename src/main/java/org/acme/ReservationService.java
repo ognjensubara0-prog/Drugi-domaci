@@ -14,7 +14,7 @@ public class ReservationService {
 
     @Transactional
     public Reservation addReservation(Reservation reservation) {
-        // Ako uz rezervaciju šaljemo i plaćanje (Payment), povezujemo ih
+        
         if (reservation.getPayment() != null) {
             reservation.getPayment().setReservation(reservation);
         }
@@ -29,7 +29,7 @@ public class ReservationService {
         return em.find(Reservation.class, id);
     }
 
-    // Metoda za pretragu po statusu (npr. PENDING, CONFIRMED) za @QueryParam
+    
     public List<Reservation> findByStatus(String status) {
         return em.createQuery("SELECT r FROM Reservation r WHERE r.status = :status", Reservation.class)
                  .setParameter("status", status)

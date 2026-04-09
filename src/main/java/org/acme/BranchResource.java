@@ -37,7 +37,7 @@ public class BranchResource {
         return Response.ok().entity(branch).build();
     }
 
-    // USLOV 3: Pretraga preko @QueryParam (npr. /branch/search?city=Podgorica)
+    
     @GET
     @Path("/search")
     public Response searchByCity(@QueryParam("city") String city) {
@@ -45,7 +45,7 @@ public class BranchResource {
         return Response.ok().entity(branches).build();
     }
 
-    // USLOV 5: Endpoint koji vraća kolekciju rezervacija za određenu poslovnicu
+    
     @GET
     @Path("/{id}/reservations")
     public Response getReservations(@PathParam("id") Long id) {

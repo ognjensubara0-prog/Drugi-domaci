@@ -25,7 +25,7 @@ public class PaymentService {
         return em.find(Payment.class, id);
     }
 
-    // Pretraga po metodu plaćanja (za @QueryParam)
+    
     public List<Payment> findByMethod(String method) {
         return em.createQuery("SELECT p FROM Payment p WHERE p.method = :method", Payment.class)
                  .setParameter("method", method)

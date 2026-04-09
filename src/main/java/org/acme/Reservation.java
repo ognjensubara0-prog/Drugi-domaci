@@ -34,7 +34,7 @@ public class Reservation {
     public Reservation() {
     }
 
-    // --- GETTERI I SETTERI ---
+
 
     public Long getId() {
         return id;

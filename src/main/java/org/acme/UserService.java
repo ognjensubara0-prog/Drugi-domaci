@@ -15,7 +15,7 @@ public class UserService {
 
     @Transactional
     public User addUser(User user) {
-        // Postavljamo vezu sa obe strane za profil i rezervacije (Uslov 4)
+        
         if (user.getUserProfile() != null) {
             user.getUserProfile().setUser(user);
         }
@@ -33,17 +33,16 @@ public class UserService {
         return em.find(User.class, id);
     }
 
-    // Dodata metoda za pretragu po imenu (potrebna za @QueryParam)
     public List<User> findByName(String name) {
         return em.createQuery("SELECT u FROM User u WHERE u.name LIKE :name", User.class)
                  .setParameter("name", "%" + name + "%")
                  .getResultList();
     }
 
-    // USLOV 6: Smisleno iskoristiti Quarkus @Scheduler
+    
     @Scheduled(every = "1h")
     void checkSystemActivity() {
-        // Loguje broj trenutnih korisnika u konzolu svakih sat vremena
+        
         Long count = em.createQuery("SELECT COUNT(u) FROM User u", Long.class).getSingleResult();
         System.out.println("[SCHEDULER] Trenutno korisnika u bazi: " + count);
     }

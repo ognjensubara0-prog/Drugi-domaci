@@ -19,20 +19,18 @@ public class User {
     private String email;
     private String password;
 
-    // USLOV 1: Prva @OneToOne relacija (User -> UserProfile)
-    // Postavljamo LAZY fetch prema tvom zahtjevu
+    
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private UserProfile userProfile;
 
-    // USLOV 2: Prva @OneToMany relacija (User -> Reservation)
-    // Dodajemo CascadeType.ALL da bi mogao dodati User-a i njegove rezervacije odjednom (Uslov 4)
+    
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Reservation> reservations = new ArrayList<>();
 
     public User() {
     }
 
-    // --- GETTERI I SETTERI ---
+   
 
     public Long getId() {
         return id;
@@ -72,7 +70,7 @@ public class User {
 
     public void setUserProfile(UserProfile userProfile) {
         this.userProfile = userProfile;
-        // Ključno: Osiguravamo dvosmjernu vezu ako profil nije null
+        
         if (userProfile != null) {
             userProfile.setUser(this);
         }
@@ -84,7 +82,7 @@ public class User {
 
     public void setReservations(List<Reservation> reservations) {
         this.reservations = reservations;
-        // Ključno: Povezujemo svaku rezervaciju sa ovim userom
+        
         if (reservations != null) {
             for (Reservation r : reservations) {
                 r.setUser(this);
