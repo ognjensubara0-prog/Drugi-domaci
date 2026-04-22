@@ -20,12 +20,32 @@ public class User {
     private String password;
 
     
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private UserProfile userProfile;
 
     
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Reservation> reservations = new ArrayList<>();
+
+    
+  
+   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+   private List<TimeZoneData> timeZoneDataList = new ArrayList<>();
+
+
+  public List<TimeZoneData> getTimeZoneDataList() {
+    return timeZoneDataList;
+}
+
+
+   public void setTimeZoneDataList(List<TimeZoneData> timeZoneDataList) {
+      this.timeZoneDataList = timeZoneDataList;
+        if (timeZoneDataList != null) {
+          for (TimeZoneData td : timeZoneDataList) {
+            td.setUser(this);
+        }
+    }
+}
 
     public User() {
     }
