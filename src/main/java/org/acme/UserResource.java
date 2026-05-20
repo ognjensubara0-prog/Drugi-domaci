@@ -25,7 +25,7 @@ public class UserResource {
     @RestClient
     IpServiceClient ipServiceClient;
 
-    // --- STARE METODE (User menadžment) ---
+    
 
     @POST
     @Path("/add")
@@ -73,7 +73,7 @@ public class UserResource {
         return Response.ok().entity(user.getReservations()).build();
     }
 
-    // --- NOVE METODE (Zadatak 1a i 1b) ---
+    
 
     @GET
     @Path("/time-by-ip")
@@ -100,35 +100,34 @@ public class UserResource {
         }
     }
 
-    // --- ZADATAK 2 (Spajanje svega i snimanje u bazu) ---
+    
 
     @GET
     @Path("/getTimezoneByIP")
     @PermitAll
-    @Transactional // Ovo omogućava upis u bazu!
+    @Transactional 
     public Response getTimezoneByIP(@QueryParam("userId") Long userId) {
-        // 1. Nađi korisnika
+        
         User user = userService.getUserById(userId);
         if (user == null) {
             return Response.status(Response.Status.NOT_FOUND).entity("User not found").build();
         }
 
         try {
-            // 2. Uzmi IP (1b) i Vreme (1a)
+           
             String myIp = ipServiceClient.getMyIp();
             String rawJson = timeServiceClient.getTimeByIp(myIp);
 
-            // 3. Napravi novi objekat TimeZoneData
+            
             TimeZoneData tz = new TimeZoneData();
-            // Ručno setujemo jer nemamo parser, ali simuliramo tvoj response
             tz.setTimeZone("Europe/Podgorica"); 
             tz.setDateTime(java.time.LocalDateTime.now().toString());
             
-            // 4. POVEŽI (Ovo je ključna linija zadatka 2)
+            
             tz.setUser(user);
             user.getTimeZoneDataList().add(tz);
 
-            // 5. Vrati korisnika (Quarkus će sam uraditi INSERT u bazu zbog @Transactional)
+            
             return Response.ok(user).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_GATEWAY).entity(e.getMessage()).build();

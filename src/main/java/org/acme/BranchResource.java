@@ -30,14 +30,14 @@ public class BranchResource {
     @GET
     @Path("/{id}")
     public Response getById(@PathParam("id") Long id) {
-        Branch branch = branchService.getBranchById(id);
+        // Izmijenjeno da koristi novu metodu koja ujedno puni i @Transient 'file' varijablu iz Stavke 3
+        Branch branch = branchService.getBranchWithFilesLoaded(id);
         if (branch == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         return Response.ok().entity(branch).build();
     }
 
-    
     @GET
     @Path("/search")
     public Response searchByCity(@QueryParam("city") String city) {
@@ -45,7 +45,6 @@ public class BranchResource {
         return Response.ok().entity(branches).build();
     }
 
-    
     @GET
     @Path("/{id}/reservations")
     public Response getReservations(@PathParam("id") Long id) {
@@ -54,5 +53,29 @@ public class BranchResource {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         return Response.ok().entity(branch.getReservations()).build();
+    }
+
+    // ---- NOVI ENDPOINTI IZ ZADATKA ----
+
+    @POST
+    @Path("/upload")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response uploadFile(@QueryParam("id") Long id, FileUploadForm form) {
+        if (form == null || form.getFile() == null || form.getFileName() == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Zahtjev mora da sadrži fajl i ime fajla.").build();
+        }
+
+        try {
+            Branch updatedBranch = branchService.uploadFileToBranch(id, form);
+            if (updatedBranch == null) {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("Branch sa proslijeđenim ID-jem ne postoji.").build();
+            }
+            return Response.ok().entity(updatedBranch).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Greška na serveru: " + e.getMessage()).build();
+        }
     }
 }
